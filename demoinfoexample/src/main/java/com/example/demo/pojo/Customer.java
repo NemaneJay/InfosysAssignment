@@ -2,8 +2,15 @@ package com.example.demo.pojo;
 
 import java.util.List;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Customer {
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
     private String name;
     private List<Transaction> transactions;
