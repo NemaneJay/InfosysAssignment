@@ -16,6 +16,13 @@ public class Transaction {
     private Long id;
 	public Transaction(long l, double d, LocalDate of) {
 		// TODO Auto-generated constructor stub
+		  this.customerId = l;
+	        this.amount = d;
+	        this.date = of;
+	}
+	public Transaction() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	public Long getId() {
 		return id;
