@@ -6,19 +6,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.pojo.Transaction;
+import com.example.demo.pojo.Customer;
+import com.example.demo.pojo.CustomerTransaction;
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
+	@Autowired
+    private CustomerRepository customerRepository;
     @Autowired
     private TransactionRepository transactionRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        transactionRepository.save(new Transaction(1L, 150.0, LocalDate.of(2025, 1, 15)));
-        transactionRepository.save(new Transaction(1L, 90.0, LocalDate.of(2025, 1, 20)));
-        transactionRepository.save(new Transaction(2L, 120.0, LocalDate.of(2025, 1, 25)));
-        // Add more sample data as needed
+        // Create sample customers
+        Customer customer1 = new Customer();
+        customer1.setName("John Doe");
+        customerRepository.save(customer1);
+
+        Customer customer2 = new Customer();
+        customer2.setName("Jane Smith");
+        customerRepository.save(customer2);
+
+        // Create sample transactions for customer1
+        transactionRepository.save(new CustomerTransaction(null, customer1.getId(), 150.0, LocalDate.of(2025, 1, 15)));
+        transactionRepository.save(new CustomerTransaction(null, customer1.getId(), 90.0, LocalDate.of(2025, 1, 20)));
+        transactionRepository.save(new CustomerTransaction(null, customer1.getId(), 200.0, LocalDate.of(2025, 2, 15)));
+        transactionRepository.save(new CustomerTransaction(null, customer1.getId(), 50.0, LocalDate.of(2025, 3, 5)));
+
+        // Create sample transactions for customer2
+        transactionRepository.save(new CustomerTransaction(null, customer2.getId(), 120.0, LocalDate.of(2025, 1, 25)));
+        transactionRepository.save(new CustomerTransaction(null, customer2.getId(), 60.0, LocalDate.of(2025, 2, 10)));
+        transactionRepository.save(new CustomerTransaction(null, customer2.getId(), 80.0, LocalDate.of(2025, 2, 20)));
+        transactionRepository.save(new CustomerTransaction(null, customer2.getId(), 110.0, LocalDate.of(2025, 3, 10)));
     }
 }

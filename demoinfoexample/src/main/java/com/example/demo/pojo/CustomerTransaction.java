@@ -2,27 +2,25 @@ package com.example.demo.pojo;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-
-public class Transaction {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-	public Transaction(long l, double d, LocalDate of) {
-		// TODO Auto-generated constructor stub
-		  this.customerId = l;
-	        this.amount = d;
-	        this.date = of;
-	}
-	public Transaction() {
+public class CustomerTransaction {
+	 public CustomerTransaction() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	public CustomerTransaction(Long id, Long customerId, Double amount, LocalDate date) {
+		super();
+		this.id = id;
+		this.customerId = customerId;
+		this.amount = amount;
+		this.date = date;
 	}
 	public Long getId() {
 		return id;
@@ -30,20 +28,16 @@ public class Transaction {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	private Long customerId;
-    private double amount;
-    private LocalDate date;
-	
 	public Long getCustomerId() {
 		return customerId;
 	}
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
-	public double getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
-	public void setAmount(double amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 	public LocalDate getDate() {
@@ -52,4 +46,10 @@ public class Transaction {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
+	@Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+	    private Long customerId;
+	    private Double amount;
+	    private LocalDate date;
 }
