@@ -17,7 +17,7 @@ public class RewardServiceTest {
 	    @Test
 	    public void testCalculatePoints() {
 	        assertEquals(90, rewardService.calculatePoints(120.0));
-	        assertEquals(75, rewardService.calculatePoints(175.0));
+	        assertEquals(200, rewardService.calculatePoints(175.0));
 	    }
 
 }
