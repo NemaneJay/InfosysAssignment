@@ -2,12 +2,14 @@ package com.example.demo.pojo;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+
 public class Transaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +23,14 @@ public class Transaction {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	private String customerId;
+	private Long customerId;
     private double amount;
     private LocalDate date;
 	
-	public String getCustomerId() {
+	public Long getCustomerId() {
 		return customerId;
 	}
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 	public double getAmount() {
