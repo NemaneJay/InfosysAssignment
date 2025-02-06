@@ -21,11 +21,11 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Create sample customers
         Customer customer1 = new Customer();
-        customer1.setName("John Doe");
+        customer1.setName("John");
         customerRepository.save(customer1);
 
         Customer customer2 = new Customer();
-        customer2.setName("Jane Smith");
+        customer2.setName("Cena");
         customerRepository.save(customer2);
 
         // Create sample transactions for customer1
