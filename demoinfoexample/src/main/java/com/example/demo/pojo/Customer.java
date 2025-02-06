@@ -12,6 +12,15 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Customer {
+	public Customer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Customer(Long id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

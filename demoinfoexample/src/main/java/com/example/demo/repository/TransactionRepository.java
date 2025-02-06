@@ -10,5 +10,6 @@ import com.example.demo.pojo.CustomerTransaction;
 @Repository
 public interface TransactionRepository extends JpaRepository<CustomerTransaction, Long> {
     List<CustomerTransaction> findByCustomerIdAndDateBetween(Long customerId, LocalDate startDate, LocalDate endDate);
+    List<CustomerTransaction> findByCustomerId(Long customerId);
 }
 
