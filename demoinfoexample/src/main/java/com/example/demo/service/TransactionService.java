@@ -25,5 +25,9 @@ public class TransactionService {
 	        transaction.setDate(date);
 	        return transactionRepository.save(transaction);
 	    }
+	    
+	    public void deleteTransaction(Long id) {
+	        transactionRepository.deleteById(id);
+	    }
 	
 }
