@@ -105,4 +105,17 @@ public class TransactionService {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found"));
         customerRepository.deleteById(customer.getId());
     }
+    
+    public RewardPointsResponse editTransaction(Long customerId, double amount, LocalDate date) {
+    	Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new RuntimeException("Customernot found"));
+    	List<CustomerTransaction> customerTransaction = transactionRepository.findByCustomerId(customerId);
+    	customerTransaction.forEach(x->{
+    		if(x.getDate().isEqual(date)) {
+    			x.setAmount(amount);
+    			transactionRepository.save(x);
+    		}
+    	});
+		return calculateMonthlyRewardPoints(customerId);
+    	
+    }
 }
