@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class TransactionService {
 
     public RewardPointsResponse calculateMonthlyRewardPoints(Long customerId) {
         List<CustomerTransaction> transactions = transactionRepository.findByCustomerId(customerId);
-        Map<String, Integer> monthlyPoints = new HashMap<>();
+        Map<String, Integer> monthlyPoints = new LinkedHashMap<>();
         int totalPoints = 0;
 
         for (CustomerTransaction transaction : transactions) {
