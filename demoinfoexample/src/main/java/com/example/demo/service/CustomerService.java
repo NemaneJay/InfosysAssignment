@@ -9,16 +9,17 @@ import org.springframework.stereotype.Service;
 import com.example.demo.pojo.Customer;
 import com.example.demo.repository.CustomerRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CustomerService {
+public class CustomerService{
 	@Autowired 
     private CustomerRepository customerRepository;
 
-    public Customer registerCustomer(String name) {
+    public Customer registerCustomer(String userName) {
         Customer customer = new Customer();
-        customer.setName(name);
+        customer.setUserName(userName);
         return customerRepository.save(customer);
     }
 

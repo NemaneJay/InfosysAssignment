@@ -32,24 +32,24 @@ public class CustomerServiceTest {
     @Test
     public void testRegisterCustomer() {
         Customer customer = new Customer();
-        customer.setName("John");
+        customer.setUserName("John");
 
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
-        assertEquals("John", customer.getName());
+        assertEquals("John", customer.getUserName());
     }
 
     @Test
     public void testFindCustomerById() {
         Customer customer = new Customer();
         customer.setId(1L);
-        customer.setName("John");
+        customer.setUserName("John");
 
         when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
 
         Customer foundCustomer = customerService.getCustomerById(1L);
 
         assertNotNull(foundCustomer);
-        assertEquals("John", foundCustomer.getName());
+        assertEquals("John", foundCustomer.getUserName());
     }
 }

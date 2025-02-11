@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.pojo.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+	 Customer findByUserName(String userName);
 }

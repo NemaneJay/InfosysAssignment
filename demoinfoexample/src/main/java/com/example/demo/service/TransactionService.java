@@ -51,7 +51,7 @@ public class TransactionService {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found"));
         RewardPointsResponse response = new RewardPointsResponse();
         response.setCustomerId(customerId);
-        response.setCustomerName(customer.getName());
+        response.setCustomerName(customer.getUserName());
         response.setMonthlyPoints(monthlyPoints);
 
         return response;
@@ -63,7 +63,7 @@ public class TransactionService {
 
         for (Customer customer : customers) {
             List<CustomerTransaction> transactions = transactionRepository.findByCustomerId(customer.getId());
-            Map<String, Integer> monthlyPoints = new HashMap<>();
+            Map<String, Integer> monthlyPoints = new LinkedHashMap<>();
             int totalPoints = 0;
 
             for (CustomerTransaction transaction : transactions) {
@@ -77,7 +77,7 @@ public class TransactionService {
 
             TransactionDetailsResponse response = new TransactionDetailsResponse();
             response.setCustomerId(customer.getId());
-            response.setCustomerName(customer.getName());
+            response.setCustomerName(customer.getUserName());
             response.setTransactions(transactions);
             response.setMonthlyPoints(monthlyPoints);
 

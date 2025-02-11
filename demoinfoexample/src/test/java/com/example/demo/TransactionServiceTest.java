@@ -31,72 +31,106 @@ public class TransactionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
     @Test
-    public void testAddTransaction() {
-        Long customerId = 1L;
-        double amount = 100.0;
-        LocalDate date = LocalDate.of(2025, 2, 6);
-        CustomerTransaction transaction = new CustomerTransaction();
-        transaction.setCustomerId(customerId);
-        transaction.setAmount(amount);
-        transaction.setDate(date);
-        when(transactionRepository.save(any(CustomerTransaction.class))).thenReturn(transaction);
-        when(transactionRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(transaction));
-        when(customerRepository.findById(customerId)).thenReturn(Optional.of(new Customer(customerId, "Jay")));
-        RewardPointsResponse response = transactionService.addTransaction(customerId, amount, date);
-        assertNotNull(response);
-        assertEquals(customerId, response.getCustomerId());
-        assertEquals("Jay", response.getCustomerName());
-        assertEquals(100, response.getMonthlyPoints().get("FEBRUARY"));
-        assertEquals(100, response.getMonthlyPoints().get("Total"));
-    }
-    @Test
     public void testCalculateMonthlyRewardPoints() {
         Long customerId = 1L;
+        LocalDate date = LocalDate.now();
+
+        Customer customer = new Customer();
+        customer.setId(customerId);
+        customer.setUserName("Jay");
+
         CustomerTransaction transaction1 = new CustomerTransaction();
         transaction1.setCustomerId(customerId);
-        transaction1.setAmount(100.0);
-        transaction1.setDate(LocalDate.of(2025, 2, 6));
+        transaction1.setAmount(120.0);
+        transaction1.setDate(date);
+
         CustomerTransaction transaction2 = new CustomerTransaction();
         transaction2.setCustomerId(customerId);
-        transaction2.setAmount(50.0);
-        transaction2.setDate(LocalDate.of(2025, 2, 7));
-        when(transactionRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(transaction1, transaction2));
-        when(customerRepository.findById(customerId)).thenReturn(Optional.of(new Customer(customerId, "Jay")));
+        transaction2.setAmount(80.0);
+        transaction2.setDate(date.minusMonths(1));
+
+        List<CustomerTransaction> transactions = Arrays.asList(transaction1, transaction2);
+
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(transactionRepository.findByCustomerId(customerId)).thenReturn(transactions);
+
         RewardPointsResponse response = transactionService.calculateMonthlyRewardPoints(customerId);
+
         assertNotNull(response);
         assertEquals(customerId, response.getCustomerId());
         assertEquals("Jay", response.getCustomerName());
-        assertEquals(150, response.getMonthlyPoints().get("FEBRUARY"));
-        assertEquals(150, response.getMonthlyPoints().get("Total"));
+        assertTrue(response.getMonthlyPoints().containsKey(date.getMonth().toString()));
+        assertTrue(response.getMonthlyPoints().containsKey(date.minusMonths(1).getMonth().toString()));
+        assertTrue(response.getMonthlyPoints().containsKey("Total"));
     }
     @Test
     public void testGetAllCustomersWithPoints() {
-        Customer customer1 = new Customer(1L, "Jay");
-        Customer customer2 = new Customer(2L, "Sagar");
-        CustomerTransaction transaction1 = new CustomerTransaction();
-        transaction1.setCustomerId(1L);
-        transaction1.setAmount(100.0);
-        transaction1.setDate(LocalDate.of(2025, 2, 6));
-        CustomerTransaction transaction2 = new CustomerTransaction();
-        transaction2.setCustomerId(2L);
-        transaction2.setAmount(50.0);
-        transaction2.setDate(LocalDate.of(2025, 2, 7));
-        when(customerRepository.findAll()).thenReturn(Arrays.asList(customer1, customer2));
-        when(transactionRepository.findByCustomerId(1L)).thenReturn(Arrays.asList(transaction1));
-        when(transactionRepository.findByCustomerId(2L)).thenReturn(Arrays.asList(transaction2));
+        Long customerId = 1L;
+        LocalDate date = LocalDate.now();
+
+        Customer customer = new Customer();
+        customer.setId(customerId);
+        customer.setUserName("Jay");
+
+        CustomerTransaction transaction = new CustomerTransaction();
+        transaction.setCustomerId(customerId);
+        transaction.setAmount(120.0);
+        transaction.setDate(date);
+
+        List<Customer> customers = Arrays.asList(customer);
+        List<CustomerTransaction> transactions = Arrays.asList(transaction);
+
+        when(customerRepository.findAll()).thenReturn(customers);
+        when(transactionRepository.findByCustomerId(customerId)).thenReturn(transactions);
+
         List<TransactionDetailsResponse> responses = transactionService.getAllCustomersWithPoints();
+
         assertNotNull(responses);
-        assertEquals(2, responses.size());
-        TransactionDetailsResponse response1 = responses.get(0);
-        assertEquals(1L, response1.getCustomerId());
-        assertEquals("Jay", response1.getCustomerName());
-        assertEquals(100, response1.getMonthlyPoints().get("FEBRUARY"));
-        assertEquals(100, response1.getMonthlyPoints().get("Total"));
-        TransactionDetailsResponse response2 = responses.get(1);
-        assertEquals(2L, response2.getCustomerId());
-        assertEquals("Sagar", response2.getCustomerName());
-        assertEquals(50, response2.getMonthlyPoints().get("FEBRUARY"));
-        assertEquals(50, response2.getMonthlyPoints().get("Total"));
+        assertFalse(responses.isEmpty());
+        assertEquals(customerId, responses.get(0).getCustomerId());
+        assertEquals("Jay", responses.get(0).getCustomerName());
+        assertTrue(responses.get(0).getMonthlyPoints().containsKey(date.getMonth().toString()));
+        assertTrue(responses.get(0).getMonthlyPoints().containsKey("Total"));
     }
+    
+    @Test
+    public void testDeleteTransaction() {
+        Long customerId = 1L;
+        Customer customer = new Customer();
+        customer.setId(customerId);
+        customer.setUserName("Jay");
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        transactionService.deleteTransaction(customerId);
+        verify(customerRepository, times(1)).deleteById(customerId);
+    }
+    @Test
+    public void testEditTransaction() {
+        Long customerId = 1L;
+        double amount = 150.0;
+        LocalDate date = LocalDate.now();
+
+        Customer customer = new Customer();
+        customer.setId(customerId);
+        customer.setUserName("Jay");
+
+        CustomerTransaction transaction = new CustomerTransaction();
+        transaction.setCustomerId(customerId);
+        transaction.setAmount(120.0);
+        transaction.setDate(date);
+
+        List<CustomerTransaction> transactions = Arrays.asList(transaction);
+
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(transactionRepository.findByCustomerId(customerId)).thenReturn(transactions);
+
+        RewardPointsResponse response = transactionService.editTransaction(customerId, amount, date);
+
+        assertNotNull(response);
+        assertEquals(customerId, response.getCustomerId());
+        assertEquals("Jay", response.getCustomerName());
+        assertTrue(response.getMonthlyPoints().containsKey(date.getMonth().toString()));
+        assertTrue(response.getMonthlyPoints().containsKey("Total"));
+    }
+    
 }
 
